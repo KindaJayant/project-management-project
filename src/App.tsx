@@ -17,9 +17,11 @@ import Dashboard from './components/Dashboard';
 import Planning from './components/Planning';
 import RiskManager from './components/RiskManager';
 import Budget from './components/Budget';
+import { initialProjectState, ProjectState } from './services/projectService';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [projectState, setProjectState] = useState<ProjectState>(initialProjectState);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -63,6 +65,38 @@ export default function App() {
       setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
     } catch (error) {
       console.error("AI Error:", error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const refineStateWithAi = async () => {
+    setIsTyping(true);
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer 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`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "arcee-ai/trinity-large-preview:free",
+          "messages": [
+            { 
+              role: "system", 
+              content: "You are a JSON generator. Return ONLY a valid JSON object matching the ProjectState interface for a futuristic project manager app. Change the metrics, tasks, and risks to be slightly different but realistic for the year 2026." 
+            },
+            { role: "user", content: `Current State: ${JSON.stringify(projectState)}. Generate a new optimized state.` }
+          ],
+          "response_format": { "type": "json_object" }
+        })
+      });
+      const data = await response.json();
+      const newState = JSON.parse(data.choices[0].message.content);
+      setProjectState(newState);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "Project state has been analytically optimized for 2026 performance standards." }]);
+    } catch (error) {
+      console.error("AI Refine Error:", error);
     } finally {
       setIsTyping(false);
     }
@@ -132,10 +166,10 @@ export default function App() {
             transition={{ duration: 0.3 }}
             className="h-full"
           >
-            {activeTab === 'dashboard' && <Dashboard />}
-            {activeTab === 'planning' && <Planning />}
-            {activeTab === 'risk' && <RiskManager />}
-            {activeTab === 'budget' && <Budget />}
+            {activeTab === 'dashboard' && <Dashboard state={projectState} />}
+            {activeTab === 'planning' && <Planning state={projectState} />}
+            {activeTab === 'risk' && <RiskManager state={projectState} />}
+            {activeTab === 'budget' && <Budget state={projectState} />}
             {(activeTab === 'analytics' || activeTab === 'team') && (
               <div className="flex flex-col items-center justify-center h-full glass-panel">
                 <h2 className="text-2xl font-bold mb-2 capitalize">{activeTab.replace('-', ' ')}</h2>

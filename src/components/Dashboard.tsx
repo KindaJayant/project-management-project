@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   TrendingUp, 
   AlertCircle, 
@@ -9,20 +8,17 @@ import {
   Clock,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ProjectState } from '../services/projectService';
 
-export default function Dashboard() {
+export default function Dashboard({ state }: { state: ProjectState }) {
   const stats = [
-    { label: 'Budget Health', value: '94.2%', change: '+2.4%', trend: 'up', icon: TrendingUp },
-    { label: 'Risk Indices', value: 'Low', change: '-12%', trend: 'down', icon: AlertCircle },
-    { label: 'Team Velocity', value: '42.8', change: '+5.1%', trend: 'up', icon: Users },
-    { label: 'Predictive Accuracy', value: '98.5%', change: '+0.4%', trend: 'up', icon: Activity },
+    { label: 'Budget Health', value: state.metrics.budgetHealth, change: state.metrics.budgetChange, trend: 'up', icon: TrendingUp },
+    { label: 'Risk Indices', value: state.metrics.riskIndices, change: state.metrics.riskChange, trend: 'down', icon: AlertCircle },
+    { label: 'Team Velocity', value: state.metrics.teamVelocity, change: state.metrics.velocityChange, trend: 'up', icon: Users },
+    { label: 'Predictive Accuracy', value: state.metrics.predictiveAccuracy, change: state.metrics.accuracyChange, trend: 'up', icon: Activity },
   ];
 
-  const recentTasks = [
-    { name: 'Core Engine Refactor', status: 'Completed', owner: 'Alex M.', priority: 'High' },
-    { name: 'Risk Mitigation Alpha', status: 'In Progress', owner: 'Sarah J.', priority: 'Medium' },
-    { name: 'Budget Realignment', status: 'Pending', owner: 'David K.', priority: 'Low' },
-  ];
+  const recentTasks = state.tasks;
 
   return (
     <div className="space-y-8 p-2">

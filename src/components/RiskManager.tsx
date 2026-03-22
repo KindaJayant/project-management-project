@@ -1,14 +1,9 @@
-import React from 'react';
 import { AlertCircle, ShieldCheck, ShieldAlert, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ProjectState } from '../services/projectService';
 
-export default function RiskManager() {
-  const risks = [
-    { id: 1, name: 'Budget Overrun', probability: 'Medium', impact: 'High', status: 'Mitigated' },
-    { id: 2, name: 'Vendor Delay', probability: 'High', impact: 'Medium', status: 'Active' },
-    { id: 3, name: 'Scope Creep', probability: 'Low', impact: 'Critical', status: 'Warning' },
-    { id: 4, name: 'Talent Attrition', probability: 'Low', impact: 'Medium', status: 'Monitored' },
-  ];
+export default function RiskManager({ state }: { state: ProjectState }) {
+  const risks = state.risks;
 
   const getStatusColor = (status: string) => {
     switch (status) {

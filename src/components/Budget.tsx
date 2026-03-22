@@ -1,14 +1,9 @@
-import React from 'react';
 import { Wallet, TrendingDown, DollarSign, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ProjectState } from '../services/projectService';
 
-export default function Budget() {
-  const expenses = [
-    { category: 'Development', spent: 120000, budget: 150000, color: '#FF6D29' },
-    { category: 'Cloud Infrastructure', spent: 45000, budget: 50000, color: '#BABABA' },
-    { category: 'Marketing', spent: 30000, budget: 80000, color: '#453027' },
-    { category: 'Operations', spent: 25000, budget: 30000, color: 'rgba(255, 255, 255, 0.1)' },
-  ];
+export default function Budget({ state }: { state: ProjectState }) {
+  const expenses = state.budget;
 
   const totalSpent = expenses.reduce((acc, curr) => acc + curr.spent, 0);
   const totalBudget = expenses.reduce((acc, curr) => acc + curr.budget, 0);

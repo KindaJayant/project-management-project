@@ -1,15 +1,9 @@
-import React from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Milestone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ProjectState } from '../services/projectService';
 
-export default function Planning() {
-  const tasks = [
-    { name: 'Research & Discovery', start: 0, duration: 2, status: 'Completed' },
-    { name: 'Architecture Design', start: 2, duration: 3, status: 'Completed' },
-    { name: 'Core Development', start: 5, duration: 5, status: 'In Progress' },
-    { name: 'Beta Testing', start: 10, duration: 3, status: 'Pending' },
-    { name: 'Deployment', start: 13, duration: 2, status: 'Pending' },
-  ];
+export default function Planning({ state }: { state: ProjectState }) {
+  const tasks = state.timeline;
 
   return (
     <div className="space-y-8 p-2">
