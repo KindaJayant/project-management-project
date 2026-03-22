@@ -1,0 +1,112 @@
+:root {
+  --primary: #FF6D29;
+  --bg-dark: #161316;
+  --bg-mid: #453027;
+  --text-primary: #FFFFFF;
+  --text-secondary: #BABABA;
+  --glass-bg: rgba(69, 48, 39, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --surface-blur: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  font-family: 'Neue Montreal', 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-dark);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(255, 109, 41, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(69, 48, 39, 0.2) 0%, transparent 40%);
+}
+
+#root {
+  width: 100%;
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--surface-blur));
+  -webkit-backdrop-filter: blur(var(--surface-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--transition);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+.accent-glow {
+  box-shadow: 0 0 30px rgba(255, 109, 41, 0.2);
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.primary-btn:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px rgba(255, 109, 41, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
