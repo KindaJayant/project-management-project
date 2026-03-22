@@ -8,6 +8,7 @@ import {
   Users, 
   Settings,
   BrainCircuit,
+  ArrowUpRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -28,6 +29,44 @@ export default function App() {
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'team', label: 'Resource Mgmt', icon: Users },
   ];
+
+  const [aiMessage, setAiMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<{role: string, content: string}[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleAiChat = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiMessage.trim()) return;
+
+    const newHistory = [...chatHistory, { role: 'user', content: aiMessage }];
+    setChatHistory(newHistory);
+    setAiMessage('');
+    setIsTyping(true);
+
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer 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`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "arcee-ai/trinity-large-preview:free",
+          "messages": [
+            { role: "system", content: "You are a professional Project Management Advisor for the year 2026. Give concise, strategic advice based on the provided query." },
+            ...newHistory
+          ]
+        })
+      });
+      const data = await response.json();
+      const reply = data.choices[0].message.content;
+      setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
+    } catch (error) {
+      console.error("AI Error:", error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   return (
     <div className="flex h-screen w-full bg-[#161316] text-white">
@@ -83,7 +122,7 @@ export default function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto p-4 pl-0">
+      <main className="flex-1 overflow-auto p-4 pl-0 relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -109,23 +148,55 @@ export default function App() {
         {/* AI Insight Floating Panel */}
         <motion.div 
           drag
-          dragConstraints={{ left: -500, right: 0, top: -500, bottom: 0 }}
-          className="absolute bottom-8 right-8 w-80 glass-panel p-6 accent-glow cursor-move z-50"
+          dragConstraints={{ left: -1000, right: 0, top: -800, bottom: 0 }}
+          className="absolute bottom-8 right-8 w-96 glass-panel p-6 accent-glow cursor-default z-50 flex flex-col max-h-[500px]"
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-[#FF6D29] rounded-lg flex items-center justify-center">
-              <BrainCircuit size={18} />
+          <div className="flex items-center justify-between mb-4 dragging-handle cursor-move">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#FF6D29] rounded-lg flex items-center justify-center">
+                <BrainCircuit size={18} />
+              </div>
+              <h4 className="font-bold text-sm">AI Project Advisor</h4>
             </div>
-            <h4 className="font-bold text-sm">AI Project Advisor</h4>
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           </div>
-          <p className="text-xs text-[#BABABA] italic mb-4">
-            "Based on current velocity and risk heatmap, I recommend reallocating 15% of the Operations budget to Core Development to ensure Q1 milestone alignment."
-          </p>
-          <button className="w-full py-2 bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all">
-            Execute Mitigation
-          </button>
+          
+          <div className="flex-1 overflow-auto space-y-4 mb-4 pr-2 custom-scrollbar min-h-[150px]">
+            {chatHistory.length === 0 && (
+              <p className="text-xs text-[#BABABA] italic text-center py-8">
+                "Hello. I am your 2026 Project Advisor. How can I help you optimize your roadmap today?"
+              </p>
+            )}
+            {chatHistory.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[80%] p-3 rounded-2xl text-[11px] ${
+                  msg.role === 'user' ? 'bg-[#FF6D29] text-white' : 'bg-white/5 text-[#BABABA] border border-white/10'
+                }`}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-white/5 p-2 rounded-lg animate-pulse text-[10px] text-[#BABABA]">AI is thinking...</div>
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleAiChat} className="flex gap-2">
+            <input 
+              type="text"
+              value={aiMessage}
+              onChange={(e) => setAiMessage(e.target.value)}
+              placeholder="Ask for project insight..."
+              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#FF6D29]/50 transition-all"
+            />
+            <button type="submit" className="p-2 bg-[#FF6D29] rounded-xl hover:brightness-110 transition-all">
+              <ArrowUpRight size={18} />
+            </button>
+          </form>
         </motion.div>
       </main>
     </div>
