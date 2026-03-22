@@ -11,11 +11,11 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Component Imports (to be created)
-// import Dashboard from './components/Dashboard';
-// import Planning from './components/Planning';
-// import RiskManager from './components/RiskManager';
-// import Budget from './components/Budget';
+// Component Imports
+import Dashboard from './components/Dashboard';
+import Planning from './components/Planning';
+import RiskManager from './components/RiskManager';
+import Budget from './components/Budget';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -93,15 +93,40 @@ export default function App() {
             transition={{ duration: 0.3 }}
             className="h-full"
           >
-            {activeTab === 'dashboard' && <DashboardSkeleton />}
-            {activeTab !== 'dashboard' && (
+            {activeTab === 'dashboard' && <Dashboard />}
+            {activeTab === 'planning' && <Planning />}
+            {activeTab === 'risk' && <RiskManager />}
+            {activeTab === 'budget' && <Budget />}
+            {(activeTab === 'analytics' || activeTab === 'team') && (
               <div className="flex flex-col items-center justify-center h-full glass-panel">
                 <h2 className="text-2xl font-bold mb-2 capitalize">{activeTab.replace('-', ' ')}</h2>
-                <p className="text-[#BABABA]">This module is being initialized by the AI...</p>
+                <p className="text-[#BABABA]">This module is being fine-tuned by the AI...</p>
               </div>
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* AI Insight Floating Panel */}
+        <motion.div 
+          drag
+          dragConstraints={{ left: -500, right: 0, top: -500, bottom: 0 }}
+          className="absolute bottom-8 right-8 w-80 glass-panel p-6 accent-glow cursor-move z-50"
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-[#FF6D29] rounded-lg flex items-center justify-center">
+              <BrainCircuit size={18} />
+            </div>
+            <h4 className="font-bold text-sm">AI Project Advisor</h4>
+          </div>
+          <p className="text-xs text-[#BABABA] italic mb-4">
+            "Based on current velocity and risk heatmap, I recommend reallocating 15% of the Operations budget to Core Development to ensure Q1 milestone alignment."
+          </p>
+          <button className="w-full py-2 bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all">
+            Execute Mitigation
+          </button>
+        </motion.div>
       </main>
     </div>
   );

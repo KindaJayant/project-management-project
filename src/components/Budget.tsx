@@ -1,0 +1,84 @@
+import React from 'react';
+import { Wallet, TrendingDown, DollarSign, PieChart } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+export default function Budget() {
+  const expenses = [
+    { category: 'Development', spent: 120000, budget: 150000, color: '#FF6D29' },
+    { category: 'Cloud Infrastructure', spent: 45000, budget: 50000, color: '#BABABA' },
+    { category: 'Marketing', spent: 30000, budget: 80000, color: '#453027' },
+    { category: 'Operations', spent: 25000, budget: 30000, color: 'rgba(255, 255, 255, 0.1)' },
+  ];
+
+  const totalSpent = expenses.reduce((acc, curr) => acc + curr.spent, 0);
+  const totalBudget = expenses.reduce((acc, curr) => acc + curr.budget, 0);
+
+  return (
+    <div className="space-y-8 p-2">
+      <header>
+        <h2 className="text-3xl font-bold tracking-tight">Financial Management</h2>
+        <p className="text-[#BABABA] mt-1">Cost tracking, estimation, and resource allocation controls.</p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="glass-card">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-[#FF6D29]/10 rounded-lg text-[#FF6D29]">
+               <DollarSign size={20} />
+            </div>
+            <span className="text-[10px] font-bold text-green-400 opacity-80">+14% Efficiency</span>
+          </div>
+          <p className="text-sm text-[#BABABA] mb-1">Total Allocated</p>
+          <h3 className="text-2xl font-bold">${totalBudget.toLocaleString()}</h3>
+        </div>
+
+        <div className="glass-card">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-white/5 rounded-lg text-[#BABABA]">
+               <Wallet size={20} />
+            </div>
+            <span className="text-[10px] font-bold text-orange-400 opacity-80">92% Utilized</span>
+          </div>
+          <p className="text-sm text-[#BABABA] mb-1">Actual Spend</p>
+          <h3 className="text-2xl font-bold">${totalSpent.toLocaleString()}</h3>
+        </div>
+
+        <div className="glass-card">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-white/5 rounded-lg text-[#BABABA]">
+               <PieChart size={20} />
+            </div>
+            <span className="text-[10px] font-bold text-[#BABABA] opacity-80">Variance: -8.4%</span>
+          </div>
+          <p className="text-sm text-[#BABABA] mb-1">Remaining</p>
+          <h3 className="text-2xl font-bold">${(totalBudget - totalSpent).toLocaleString()}</h3>
+        </div>
+      </div>
+
+      <div className="glass-panel p-8">
+        <h3 className="text-xl font-bold mb-8">Category Breakdown</h3>
+        <div className="space-y-8">
+          {expenses.map((item, i) => (
+            <div key={item.category}>
+              <div className="flex justify-between mb-2">
+                <span className="text-sm font-semibold">{item.category}</span>
+                <span className="text-xs text-[#BABABA]">
+                  ${item.spent.toLocaleString()} / <span className="text-white">${item.budget.toLocaleString()}</span>
+                </span>
+              </div>
+              <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(item.spent / item.budget) * 100}%` }}
+                  transition={{ duration: 1.2, delay: i * 0.1 }}
+                  className="h-full rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
