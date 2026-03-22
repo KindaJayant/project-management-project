@@ -219,6 +219,13 @@ export default function App() {
             )}
           </div>
 
+          <button 
+            onClick={refineStateWithAi}
+            className="w-full py-2 bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all mb-2"
+          >
+            Optimize Project Status
+          </button>
+
           <form onSubmit={handleAiChat} className="flex gap-2">
             <input 
               type="text"
@@ -237,53 +244,3 @@ export default function App() {
   );
 }
 
-function DashboardSkeleton() {
-  return (
-    <div className="space-y-6">
-      <header className="flex justify-between items-center mb-8">
-        <div>
-          <h2 className="text-3xl font-bold">Project Alpha</h2>
-          <p className="text-[#BABABA]">Strategic Digital Overhaul • 2026 Q1</p>
-        </div>
-        <button className="primary-btn flex items-center gap-2">
-          <span>Generate Report</span>
-          <BarChart3 size={18} />
-        </button>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Budget Health', value: '94%', sub: '+2.4% vs last week' },
-          { label: 'Risk Indices', value: 'Low', sub: '3 active mitigations' },
-          { label: 'Team Velocity', value: '42.8', sub: 'Tasks / Sprint' },
-          { label: 'AI Confidence', value: 'High', sub: 'Predictive accuracy 98%' },
-        ].map((stat, i) => (
-          <div key={i} className="glass-card">
-            <p className="text-sm text-[#BABABA] mb-1">{stat.label}</p>
-            <h3 className="text-2xl font-bold mb-2">{stat.value}</h3>
-            <p className="text-xs text-green-500 font-medium">{stat.sub}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 glass-panel p-6 min-h-[400px]">
-          <h3 className="text-xl font-bold mb-6">Execution Roadmap</h3>
-          <div className="space-y-4">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-16 w-full bg-white/5 rounded-xl animate-pulse" />
-            ))}
-          </div>
-        </div>
-        <div className="glass-panel p-6">
-          <h3 className="text-xl font-bold mb-6">Risk Register</h3>
-          <div className="space-y-4">
-             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-12 w-full bg-white/5 rounded-xl" />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
