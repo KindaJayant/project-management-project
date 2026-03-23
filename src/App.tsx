@@ -17,6 +17,7 @@ import Dashboard from './components/Dashboard';
 import Planning from './components/Planning';
 import RiskManager from './components/RiskManager';
 import Budget from './components/Budget';
+import HowToUse from './components/HowToUse';
 import { initialProjectState, ProjectState } from './services/projectService';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
     { id: 'budget', label: 'Budget & Cost', icon: Wallet },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'team', label: 'Resource Mgmt', icon: Users },
+    { id: 'how-to-use', label: 'How to Use?', icon: BrainCircuit },
   ];
 
   const [aiMessage, setAiMessage] = useState('');
@@ -53,7 +55,7 @@ export default function App() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "arcee-ai/trinity-large-preview:free",
+          "model": "google/gemini-2.0-flash-exp:free",
           "messages": [
             { role: "system", content: "You are a professional Project Management Advisor for the year 2026. Give concise, strategic advice based on the provided query." },
             ...newHistory
@@ -80,7 +82,7 @@ export default function App() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "arcee-ai/trinity-large-preview:free",
+          "model": "google/gemini-2.0-flash-exp:free",
           "messages": [
             { 
               role: "system", 
@@ -92,11 +94,23 @@ export default function App() {
         })
       });
       const data = await response.json();
-      const newState = JSON.parse(data.choices[0].message.content);
-      setProjectState(newState);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "Project state has been analytically optimized for 2026 performance standards." }]);
+      const content = data.choices[0].message.content;
+      
+      // Attempt to parse JSON, sometimes AI wraps it in markdown blocks
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      const cleanJson = jsonMatch ? jsonMatch[0] : content;
+      
+      try {
+        const newState = JSON.parse(cleanJson);
+        setProjectState(newState);
+        setChatHistory(prev => [...prev, { role: 'assistant', content: "Project state has been analytically optimized for 2026 performance standards." }]);
+      } catch (parseError) {
+        console.error("JSON Parse Error:", parseError, "Clean JSON:", cleanJson);
+        setChatHistory(prev => [...prev, { role: 'assistant', content: "I encountered an error while optimizing the project state. Please try again." }]);
+      }
     } catch (error) {
       console.error("AI Refine Error:", error);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "Connection to AI advisor lost. Retrying synchronization..." }]);
     } finally {
       setIsTyping(false);
     }
@@ -170,10 +184,11 @@ export default function App() {
             {activeTab === 'planning' && <Planning state={projectState} />}
             {activeTab === 'risk' && <RiskManager state={projectState} />}
             {activeTab === 'budget' && <Budget state={projectState} />}
+            {activeTab === 'how-to-use' && <HowToUse />}
             {(activeTab === 'analytics' || activeTab === 'team') && (
               <div className="flex flex-col items-center justify-center h-full glass-panel">
                 <h2 className="text-2xl font-bold mb-2 capitalize">{activeTab.replace('-', ' ')}</h2>
-                <p className="text-[#BABABA]">This module is being fine-tuned by the AI...</p>
+                <p className="text-[#BABABA]">This module is being fine-tuned by the AI... Consult the <strong>How to Use?</strong> section for more details.</p>
               </div>
             )}
           </motion.div>
