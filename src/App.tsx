@@ -55,7 +55,7 @@ export default function App() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "google/gemini-2.0-flash-exp:free",
+          "model": "arcee-ai/trinity-large-preview:free",
           "messages": [
             { role: "system", content: "You are a professional Project Management Advisor for the year 2026. Give concise, strategic advice based on the provided query." },
             ...newHistory
