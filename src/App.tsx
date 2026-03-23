@@ -63,10 +63,14 @@ export default function App() {
         })
       });
       const data = await response.json();
+      if (!data.choices?.[0]?.message?.content) {
+        throw new Error("Invalid AI response");
+      }
       const reply = data.choices[0].message.content;
       setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
     } catch (error) {
       console.error("AI Error:", error);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "Neural link interrupted. Please verify your 2026 uplink status." }]);
     } finally {
       setIsTyping(false);
     }
@@ -218,13 +222,18 @@ export default function App() {
               </p>
             )}
             {chatHistory.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-2xl text-[11px] ${
-                  msg.role === 'user' ? 'bg-[#FF6D29] text-white' : 'bg-white/5 text-[#BABABA] border border-white/10'
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, x: msg.role === 'user' ? 10 : -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-[85%] p-3 rounded-2xl text-[11px] leading-relaxed ${
+                  msg.role === 'user' ? 'bg-[#FF6D29] text-white shadow-lg' : 'bg-white/5 text-[#BABABA] border border-white/10'
                 }`}>
                   {msg.content}
                 </div>
-              </div>
+              </motion.div>
             ))}
             {isTyping && (
               <div className="flex justify-start">
