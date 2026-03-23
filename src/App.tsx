@@ -89,8 +89,7 @@ export default function App() {
               content: "You are a JSON generator. Return ONLY a valid JSON object matching the ProjectState interface for a futuristic project manager app. Change the metrics, tasks, and risks to be slightly different but realistic for the year 2026." 
             },
             { role: "user", content: `Current State: ${JSON.stringify(projectState)}. Generate a new optimized state.` }
-          ],
-          "response_format": { "type": "json_object" }
+          ]
         })
       });
       const data = await response.json();
@@ -110,7 +109,7 @@ export default function App() {
       }
     } catch (error) {
       console.error("AI Refine Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "Connection to AI advisor lost. Retrying synchronization..." }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the 2026 optimization core. Please verify your connection and try again." }]);
     } finally {
       setIsTyping(false);
     }
