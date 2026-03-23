@@ -36,55 +36,73 @@ export default function HowToUse() {
   ];
 
   return (
-    <div className="flex flex-col h-full glass-panel overflow-auto custom-scrollbar p-10">
-      <div className="max-w-3xl mx-auto w-full">
-        <header className="mb-10">
-          <h2 className="text-3xl font-black mb-3">System Navigation</h2>
-          <p className="text-[#BABABA] text-sm">Everything you need to master your 2026 project roadmap.</p>
-        </header>
+    <div className="flex flex-col h-full glass-panel overflow-auto custom-scrollbar p-12">
+      <div className="max-w-5xl mx-auto w-full">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-black tracking-tighter mb-4 text-[#FF6D29]">PM-OS HANDBOOK</h2>
+          <p className="text-[#BABABA] text-sm uppercase tracking-[0.4em]">Protocol Version 4.2.0 • Edition 2026</p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16">
           {features.map((feature, i) => (
             <motion.div 
               key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="glass-card p-5 border border-white/5"
+              className="glass-card !p-6 flex flex-col items-center text-center border border-white/5 hover:border-[#FF6D29]/30 transition-all duration-300"
             >
-              <feature.icon className="text-[#FF6D29] mb-3" size={20} />
-              <h4 className="font-bold text-sm mb-1">{feature.title}</h4>
-              <p className="text-xs text-[#BABABA] leading-tight">{feature.description}</p>
+              <div className="w-10 h-10 rounded-full bg-[#FF6D29]/10 flex items-center justify-center mb-4">
+                <feature.icon className="text-[#FF6D29]" size={18} />
+              </div>
+              <h4 className="font-bold text-xs uppercase tracking-widest mb-2 text-white/90">{feature.title}</h4>
+              <p className="text-[10px] text-[#BABABA] leading-normal">{feature.description}</p>
             </motion.div>
           ))}
         </div>
 
-        <section className="glass-card p-6 bg-[#FF6D29]/5 border-[#FF6D29]/10">
-          <h3 className="text-xs font-bold uppercase tracking-widest mb-4">Quick Start</h3>
-          <ul className="space-y-3">
-            {[
-              "Ask the AI Advisor for project insights",
-              "Use 'Optimize' for automated state refinement",
-              "Track timelines in the Planning module",
-              "Monitor real-time health on the Dashboard"
-            ].map((text, i) => (
-              <li key={i} className="flex gap-3 text-xs text-[#BABABA]">
-                <span className="text-[#FF6D29]">•</span> {text}
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <section className="glass-card !p-8 border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-[#FF6D29]">Operational Quick Start</h3>
+            <ul className="space-y-4">
+              {[
+                "Initiate AI Advisor for contextual project audits.",
+                "Trigger 'Optimization' to align metrics with 2026 standards.",
+                "Map execution roadmaps in the Planning module.",
+                "Monitor high-fidelity health indices on the Dashboard."
+              ].map((text, i) => (
+                <li key={i} className="flex gap-4 text-[11px] text-[#BABABA] items-start">
+                  <div className="w-1 h-1 rounded-full bg-[#FF6D29] mt-1.5 shrink-0" />
+                  <span>{text}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <footer className="mt-10 pt-6 border-t border-white/5 flex justify-between items-center">
-          <span className="text-[10px] text-[#636363] uppercase tracking-widest">PM-OS v4.2.0</span>
-          <div className="flex gap-4">
-            <span className="text-[10px] font-bold text-[#BABABA] flex items-center gap-1">
-              <div className="w-1 h-1 rounded-full bg-green-500" /> ONLINE
-            </span>
-          </div>
-        </footer>
+          <section className="glass-card !p-8 border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent flex flex-col justify-center">
+            <div className="mb-6">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-2 text-[#FF6D29]">System Status</h3>
+              <p className="text-[10px] text-[#BABABA]">All neural cores synchronized and operational.</p>
+            </div>
+            <div className="flex gap-8">
+              <div className="flex flex-col gap-1">
+                <span className="text-[9px] text-[#636363] uppercase font-bold">Latency</span>
+                <span className="text-xs font-mono text-green-400">12ms</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[9px] text-[#636363] uppercase font-bold">AI Compute</span>
+                <span className="text-xs font-mono text-[#FF6D29]">Optimal</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[9px] text-[#636363] uppercase font-bold">Auth Level</span>
+                <span className="text-xs font-mono text-white/60">Admin</span>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
 }
+
 
