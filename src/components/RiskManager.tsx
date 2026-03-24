@@ -10,7 +10,7 @@ export default function RiskManager({ state }: { state: ProjectState }) {
       case 'Mitigated': return 'text-green-400';
       case 'Active': return 'text-red-400';
       case 'Warning': return 'text-yellow-400';
-      default: return 'text-[#8DA0B8]';
+      default: return 'text-[#94A3B8]';
     }
   };
 
@@ -18,13 +18,13 @@ export default function RiskManager({ state }: { state: ProjectState }) {
     <div className="space-y-8 p-2">
       <header>
         <h2 className="text-3xl font-bold tracking-tight">Risk Register</h2>
-        <p className="text-[#8DA0B8] mt-1">Predictive risk assessment and mitigation strategy center.</p>
+        <p className="text-[#94A3B8] mt-1">Predictive risk assessment and mitigation strategy center.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass-panel p-8">
           <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <Zap size={20} className="text-[#D7263D]" />
+            <Zap size={20} className="text-[#3B82F6]" />
             AI Risk Heatmap
           </h3>
           <div className="grid grid-cols-5 grid-rows-5 gap-2 h-80">
@@ -42,7 +42,7 @@ export default function RiskManager({ state }: { state: ProjectState }) {
               />
             ))}
           </div>
-          <div className="flex justify-between mt-4 text-[10px] text-[#8DA0B8] font-bold uppercase tracking-widest">
+          <div className="flex justify-between mt-4 text-[10px] text-[#94A3B8] font-bold uppercase tracking-widest">
             <span>Low Impact</span>
             <span>Critical Impact</span>
           </div>
@@ -59,14 +59,14 @@ export default function RiskManager({ state }: { state: ProjectState }) {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold">{risk.name}</h4>
-                    <p className="text-xs text-[#8DA0B8]">Impact: {risk.impact}</p>
+                    <p className="text-xs text-[#94A3B8]">Impact: {risk.impact}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className={`text-xs font-bold ${getStatusColor(risk.status)}`}>
                     {risk.status}
                   </div>
-                  <p className="text-[10px] text-[#8DA0B8]">Prob: {risk.probability}</p>
+                  <p className="text-[10px] text-[#94A3B8]">Prob: {risk.probability}</p>
                 </div>
               </div>
             ))}

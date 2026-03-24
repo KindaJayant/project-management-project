@@ -10,7 +10,7 @@ export default function Planning({ state }: { state: ProjectState }) {
       <header className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Project Timeline</h2>
-          <p className="text-[#8DA0B8] mt-1">Strategic roadmap and Work Breakdown Structure (WBS).</p>
+          <p className="text-[#94A3B8] mt-1">Strategic roadmap and Work Breakdown Structure (WBS).</p>
         </div>
         <div className="flex gap-2">
           <button className="glass-card !p-2 hover:bg-white/10 transition-all"><ChevronLeft size={18} /></button>
@@ -19,9 +19,9 @@ export default function Planning({ state }: { state: ProjectState }) {
       </header>
 
       <div className="glass-panel p-8">
-        <div className="flex items-center gap-4 mb-8 text-sm font-semibold text-[#8DA0B8]">
+        <div className="flex items-center gap-4 mb-8 text-sm font-semibold text-[#94A3B8]">
           <div className="flex items-center gap-2"><Calendar size={16} /> March 2026</div>
-          <div className="flex items-center gap-2 ml-auto"><Milestone size={16} className="text-[#D7263D]" /> 3 Milestones Reached</div>
+          <div className="flex items-center gap-2 ml-auto"><Milestone size={16} className="text-[#3B82F6]" /> 3 Milestones Reached</div>
         </div>
 
         <div className="space-y-6 relative">
@@ -35,8 +35,8 @@ export default function Planning({ state }: { state: ProjectState }) {
           {tasks.map((task, i) => (
             <div key={task.name} className="relative z-10">
               <div className="flex justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8DA0B8]">{task.name}</span>
-                <span className={`text-[10px] font-bold ${task.status === 'Completed' ? 'text-green-400' : 'text-[#D7263D]'}`}>{task.status}</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#94A3B8]">{task.name}</span>
+                <span className={`text-[10px] font-bold ${task.status === 'Completed' ? 'text-green-400' : 'text-[#3B82F6]'}`}>{task.status}</span>
               </div>
               <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden">
                 <motion.div
@@ -44,7 +44,7 @@ export default function Planning({ state }: { state: ProjectState }) {
                   animate={{ width: `${(task.duration / 15) * 100}%`, x: `${(task.start / 15) * 100}%` }}
                   transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.1 }}
                   className={`h-full rounded-full ${
-                    task.status === 'Completed' ? 'bg-white/20' : 'bg-[#D7263D] accent-glow'
+                    task.status === 'Completed' ? 'bg-white/20' : 'bg-[#3B82F6] accent-glow'
                   }`}
                 />
               </div>
@@ -60,9 +60,9 @@ export default function Planning({ state }: { state: ProjectState }) {
           { label: 'Next Milestone', value: 'April 05', desc: 'Stakeholder Review' },
         ].map((item, i) => (
           <div key={i} className="glass-card">
-            <p className="text-xs text-[#8DA0B8] mb-1 font-bold uppercase tracking-widest">{item.label}</p>
+            <p className="text-xs text-[#94A3B8] mb-1 font-bold uppercase tracking-widest">{item.label}</p>
             <h4 className="text-xl font-bold">{item.value}</h4>
-            <p className="text-xs text-[#8DA0B8] mt-2">{item.desc}</p>
+            <p className="text-xs text-[#94A3B8] mt-2">{item.desc}</p>
           </div>
         ))}
       </div>

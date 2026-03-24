@@ -25,11 +25,11 @@ export default function Dashboard({ state }: { state: ProjectState }) {
       <header className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Project Health Overview</h2>
-          <p className="text-[#8DA0B8] mt-1">Real-time analytical metrics for Strategic Digital Overhaul.</p>
+          <p className="text-[#94A3B8] mt-1">Real-time analytical metrics for Strategic Digital Overhaul.</p>
         </div>
         <div className="flex gap-3">
            <div className="glass-card !py-2 !px-4 flex items-center gap-2">
-            <Clock size={16} className="text-[#D7263D]" />
+            <Clock size={16} className="text-[#3B82F6]" />
             <span className="text-xs font-medium">Last Sync: Just now</span>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function Dashboard({ state }: { state: ProjectState }) {
             className="glass-card relative overflow-hidden group"
           >
             <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-[#D7263D]/10 rounded-lg text-[#D7263D]">
+              <div className="p-2 bg-[#3B82F6]/10 rounded-lg text-[#3B82F6]">
                 <stat.icon size={20} />
               </div>
               <div className={`flex items-center text-xs font-bold ${stat.trend === 'up' ? 'text-green-400' : 'text-orange-400'}`}>
@@ -54,11 +54,11 @@ export default function Dashboard({ state }: { state: ProjectState }) {
                 {stat.trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
               </div>
             </div>
-            <p className="text-sm text-[#8DA0B8] mb-1">{stat.label}</p>
+            <p className="text-sm text-[#94A3B8] mb-1">{stat.label}</p>
             <h3 className="text-2xl font-bold">{stat.value}</h3>
             
             {/* Subtle background glow */}
-            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#D7263D]/5 rounded-full blur-2xl group-hover:bg-[#D7263D]/10 transition-all" />
+            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#3B82F6]/5 rounded-full blur-2xl group-hover:bg-[#3B82F6]/10 transition-all" />
           </motion.div>
         ))}
       </div>
@@ -70,7 +70,7 @@ export default function Dashboard({ state }: { state: ProjectState }) {
           <div className="flex justify-between items-center mb-10">
             <h3 className="text-xl font-bold">Execution roadmap</h3>
             <div className="flex gap-2">
-              <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] text-[#8DA0B8] uppercase font-bold tracking-widest">Q1 2026</span>
+              <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] text-[#94A3B8] uppercase font-bold tracking-widest">Q1 2026</span>
             </div>
           </div>
           
@@ -81,9 +81,9 @@ export default function Dashboard({ state }: { state: ProjectState }) {
                   initial={{ height: 0 }}
                   animate={{ height: `${h}%` }}
                   transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.1 }}
-                  className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 ${i === 4 ? 'bg-[#D7263D] accent-glow' : 'bg-white/10'}`}
+                  className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 ${i === 4 ? 'bg-[#3B82F6] accent-glow' : 'bg-white/10'}`}
                 />
-                <span className="text-[10px] text-[#8DA0B8] font-bold">W-0{i+1}</span>
+                <span className="text-[10px] text-[#94A3B8] font-bold">W-0{i+1}</span>
               </div>
             ))}
           </div>
@@ -96,12 +96,12 @@ export default function Dashboard({ state }: { state: ProjectState }) {
             {recentTasks.map((task, i) => (
               <div key={i} className="flex items-start gap-4">
                 <div className={`w-2 h-2 rounded-full mt-2 ${
-                  task.priority === 'High' ? 'bg-[#D7263D]' : 
-                  task.priority === 'Medium' ? 'bg-[#8DA0B8]' : 'bg-white/10'
+                  task.priority === 'High' ? 'bg-[#3B82F6]' : 
+                  task.priority === 'Medium' ? 'bg-[#94A3B8]' : 'bg-white/10'
                 }`} />
                 <div className="flex-1">
                   <h4 className="text-sm font-semibold">{task.name}</h4>
-                  <p className="text-xs text-[#8DA0B8]">{task.owner} • {task.status}</p>
+                  <p className="text-xs text-[#94A3B8]">{task.owner} • {task.status}</p>
                 </div>
               </div>
             ))}
