@@ -11,7 +11,8 @@ import {
   ArrowUpRight,
   Sparkles,
   Plus,
-  ArrowUp
+  ArrowUp,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,6 +41,7 @@ export default function App() {
   const [aiMessage, setAiMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<{role: string, content: string}[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isAiOpen, setIsAiOpen] = useState(true);
 
   const handleAiChat = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -227,83 +229,117 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* AI Insight Docked Right Sidebar */}
-      <aside className="w-80 glass-panel m-4 ml-0 flex flex-col p-6 shrink-0 relative overflow-hidden z-10">
-        <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#3B82F6]/20 border border-[#3B82F6]/30 rounded-lg flex items-center justify-center">
-              <BrainCircuit size={16} className="text-[#3B82F6]" />
-            </div>
-            <h4 className="font-bold text-sm text-[#F8FAFC]">AI Project Advisor</h4>
-          </div>
-        </div>
-        
-        <div className="flex-1 overflow-auto space-y-4 mb-4 pr-2 custom-scrollbar relative z-10">
-          {chatHistory.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#3B82F6]/10 flex items-center justify-center border border-[#3B82F6]/20">
-                <BrainCircuit size={32} className="text-[#3B82F6]/50" />
-              </div>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
-                "Hello. I am your 2026 Project Advisor. How can I help you optimize your roadmap today?"
-              </p>
-            </div>
-          )}
-          {chatHistory.map((msg, i) => (
-            <motion.div 
-              key={i} 
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`max-w-[85%] p-3 text-[12px] leading-relaxed ${
-                msg.role === 'user' 
-                  ? 'bg-gradient-to-br from-[#3B82F6] to-blue-600 text-white rounded-2xl rounded-tr-sm shadow-[0_8px_16px_rgba(59,130,246,0.2)]' 
-                  : 'bg-[#0F172A] border border-white/5 text-[#E2E8F0] rounded-2xl rounded-tl-sm shadow-lg'
-              }`}>
-                {msg.content}
-              </div>
-            </motion.div>
-          ))}
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-[#0F172A] border border-white/5 p-3 rounded-2xl rounded-tl-sm shadow-lg flex gap-1.5 items-center h-10">
-                <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="relative z-10 space-y-3 mt-auto pt-4 border-t border-white/5">
-          <button 
-            onClick={refineStateWithAi}
-            className="w-full py-2.5 bg-[#3B82F6]/10 border border-[#3B82F6]/30 text-[#3B82F6] rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3B82F6] hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.1)] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] flex justify-center items-center gap-2"
+      {/* AI Assistant Toggle Button (Visible when closed) */}
+      <AnimatePresence>
+        {!isAiOpen && (
+          <motion.button
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 100, opacity: 0 }}
+            onClick={() => setIsAiOpen(true)}
+            className="fixed top-6 right-6 z-50 p-3 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105"
+            style={{ 
+              background: 'rgba(59, 130, 246, 0.15)', 
+              border: '1px solid rgba(59, 130, 246, 0.4)',
+              backdropFilter: 'blur(12px)',
+              color: '#3B82F6'
+            }}
           >
-            <Sparkles size={14} /> Optimize Project Status
-          </button>
+            <BrainCircuit size={24} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-          <form onSubmit={handleAiChat} className="chat-form">
-            <input 
-              type="text"
-              value={aiMessage}
-              onChange={(e) => setAiMessage(e.target.value)}
-              placeholder="Ask anything"
-              className="chat-input"
-            />
-            <button 
-              type="submit" 
-              className="chat-submit"
-              disabled={!aiMessage.trim() || isTyping}
-            >
-              <ArrowUp size={18} strokeWidth={3} />
-            </button>
-          </form>
-        </div>
-      </aside>
+      {/* AI Insight Docked Right Sidebar */}
+      <AnimatePresence>
+        {isAiOpen && (
+          <motion.aside 
+            initial={{ width: 0, opacity: 0, marginRight: 0 }}
+            animate={{ width: 320, opacity: 1, marginRight: '1rem' }}
+            exit={{ width: 0, opacity: 0, marginRight: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="glass-panel my-4 ml-0 flex flex-col p-6 shrink-0 relative overflow-hidden z-10"
+            style={{ width: '20rem' }}
+          >
+            <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-[#3B82F6]/20 border border-[#3B82F6]/30 rounded-lg flex items-center justify-center">
+                  <BrainCircuit size={16} className="text-[#3B82F6]" />
+                </div>
+                <h4 className="font-bold text-sm text-[#F8FAFC]">AI Project Advisor</h4>
+              </div>
+              <button 
+                onClick={() => setIsAiOpen(false)} 
+                className="text-[#94A3B8] hover:text-white transition-colors p-1 rounded-md hover:bg-white/5"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-auto space-y-4 mb-4 pr-2 custom-scrollbar relative z-10">
+              {chatHistory.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-[#3B82F6]/10 flex items-center justify-center border border-[#3B82F6]/20">
+                    <BrainCircuit size={32} className="text-[#3B82F6]/50" />
+                  </div>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    "Hello. I am your 2026 Project Advisor. How can I help you optimize your roadmap today?"
+                  </p>
+                </div>
+              )}
+              {chatHistory.map((msg, i) => (
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  className={`chat-msg-container ${msg.role === 'user' ? 'user' : 'ai'}`}
+                >
+                  <div className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
+                    {msg.content}
+                  </div>
+                </motion.div>
+              ))}
+              {isTyping && (
+                <div className="chat-msg-container ai">
+                  <div className="chat-bubble ai typing-dots">
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="relative z-10 space-y-3 mt-auto pt-4 border-t border-white/5">
+              <button 
+                onClick={refineStateWithAi}
+                className="w-full py-2.5 bg-[#3B82F6]/10 border border-[#3B82F6]/30 text-[#3B82F6] rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3B82F6] hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.1)] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] flex justify-center items-center gap-2"
+              >
+                <Sparkles size={14} /> Optimize Project Status
+              </button>
+
+              <form onSubmit={handleAiChat} className="chat-form">
+                <input 
+                  type="text"
+                  value={aiMessage}
+                  onChange={(e) => setAiMessage(e.target.value)}
+                  placeholder="Ask anything"
+                  className="chat-input"
+                />
+                <button 
+                  type="submit" 
+                  className="chat-submit"
+                  disabled={!aiMessage.trim() || isTyping}
+                >
+                  <ArrowUp size={18} strokeWidth={3} />
+                </button>
+              </form>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
