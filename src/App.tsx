@@ -71,7 +71,7 @@ export default function App() {
       setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
     } catch (error) {
       console.error("AI Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "Neural link interrupted. Please verify your 2026 uplink status." }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "API Error: Unable to fetch response. Please ensure your VITE_OPENROUTER_API_KEY is correctly set in your .env file." }]);
     } finally {
       setIsTyping(false);
     }
@@ -114,7 +114,7 @@ export default function App() {
       }
     } catch (error) {
       console.error("AI Refine Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the 2026 optimization core. Please verify your connection and try again." }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: "API Connection Failed. Please verify your VITE_OPENROUTER_API_KEY." }]);
     } finally {
       setIsTyping(false);
     }
@@ -201,7 +201,7 @@ export default function App() {
       </main>
 
       {/* AI Insight Docked Right Sidebar */}
-      <aside className="w-96 glass-panel m-4 ml-0 flex flex-col p-6 shrink-0 relative overflow-hidden z-10">
+      <aside className="w-80 glass-panel m-4 ml-0 flex flex-col p-6 shrink-0 relative overflow-hidden z-10">
         <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
@@ -260,15 +260,15 @@ export default function App() {
             <Sparkles size={14} /> Optimize Project Status
           </button>
 
-          <form onSubmit={handleAiChat} className="flex gap-2">
+          <form onSubmit={handleAiChat} className="flex gap-2 w-full">
             <input 
               type="text"
               value={aiMessage}
               onChange={(e) => setAiMessage(e.target.value)}
               placeholder="Ask for project insight..."
-              className="flex-1 bg-[#0F172A] border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#3B82F6]/50 transition-all placeholder:text-[#64748B] shadow-inner"
+              className="flex-1 w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 transition-all placeholder:text-[#64748B]"
             />
-            <button type="submit" className="p-2.5 bg-[#3B82F6] text-white rounded-xl hover:brightness-110 transition-all shadow-[0_4px_12px_rgba(59,130,246,0.3)]">
+            <button type="submit" className="shrink-0 w-10 h-10 bg-[#3B82F6] text-white rounded-xl hover:bg-blue-600 transition-all shadow-[0_4px_12px_rgba(59,130,246,0.3)] flex items-center justify-center">
               <ArrowUpRight size={18} />
             </button>
           </form>
