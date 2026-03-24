@@ -10,6 +10,8 @@ import {
   BrainCircuit,
   ArrowUpRight,
   Sparkles,
+  Plus,
+  ArrowUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -31,8 +33,8 @@ export default function App() {
     { id: 'risk', label: 'Risk Management', icon: AlertTriangle },
     { id: 'budget', label: 'Budget & Cost', icon: Wallet },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'team', label: 'Resource Mgmt', icon: Users },
-    { id: 'how-to-use', label: 'How to Use?', icon: BrainCircuit },
+    { id: 'team', label: 'Resource Management', icon: Users },
+    { id: 'how-to-use', label: 'How to Use?', icon: Sparkles },
   ];
 
   const [aiMessage, setAiMessage] = useState('');
@@ -53,10 +55,12 @@ export default function App() {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "Project Management OS",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "arcee-ai/trinity-large-preview:free",
+          "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
           "messages": [
             { role: "system", content: "You are a professional Project Management Advisor for the year 2026. Give concise, strategic advice based on the provided query." },
             ...newHistory
@@ -64,14 +68,19 @@ export default function App() {
         })
       });
       const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error.message || "OpenRouter API rejected the request.");
+      }
+      
       if (!data.choices?.[0]?.message?.content) {
-        throw new Error("Invalid AI response");
+        throw new Error("Invalid AI response structure.");
       }
       const reply = data.choices[0].message.content;
       setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "API Error: Unable to fetch response. Please ensure your VITE_OPENROUTER_API_KEY is correctly set in your .env file." }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: `API Error: ${error.message}` }]);
     } finally {
       setIsTyping(false);
     }
@@ -84,10 +93,12 @@ export default function App() {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "Project Management OS",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "google/gemini-2.0-flash-exp:free",
+          "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
           "messages": [
             { 
               role: "system", 
@@ -98,6 +109,15 @@ export default function App() {
         })
       });
       const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error.message || "OpenRouter API rejected the state refinement request.");
+      }
+
+      if (!data.choices?.[0]?.message?.content) {
+        throw new Error("Invalid AI response structure.");
+      }
+
       const content = data.choices[0].message.content;
       
       // Attempt to parse JSON, sometimes AI wraps it in markdown blocks
@@ -112,9 +132,9 @@ export default function App() {
         console.error("JSON Parse Error:", parseError, "Clean JSON:", cleanJson);
         setChatHistory(prev => [...prev, { role: 'assistant', content: "I encountered an error while optimizing the project state. Please try again." }]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Refine Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: "API Connection Failed. Please verify your VITE_OPENROUTER_API_KEY." }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: `API Error: ${error.message}` }]);
     } finally {
       setIsTyping(false);
     }
@@ -130,8 +150,8 @@ export default function App() {
             <BrainCircuit size={24} className="text-[#3B82F6]" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">PM-OS</h1>
-            <p className="text-[10px] text-[#94A3B8] uppercase tracking-[0.2em]">Edition 2026</p>
+            <h1 className="text-lg font-bold tracking-tight leading-tight">Project Management</h1>
+            <p className="text-[10px] text-[#94A3B8] uppercase tracking-[0.2em] mt-0.5">Edition 2026</p>
           </div>
         </div>
 
@@ -164,11 +184,17 @@ export default function App() {
             <span className="font-medium">Settings</span>
           </button>
           
-          <div className="glass-card p-4 mt-4 !bg-[#3B82F6]/5 !border-[#3B82F6]/20">
-            <p className="text-xs text-[#94A3B8] mb-2">System Status</p>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-              <span className="text-sm font-semibold text-[#F8FAFC]">AI Assistant Online</span>
+          <div className="mt-4 flex flex-col gap-3 p-3.5 bg-[#0F172A]/80 rounded-xl border border-white/5 shadow-inner">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-widest">System Status</span>
+              <span className="text-[10px] text-cyan-400 font-bold">12ms Ping</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+              </div>
+              <span className="text-xs font-semibold text-white/90">AI Core Online</span>
             </div>
           </div>
         </div>
@@ -260,16 +286,23 @@ export default function App() {
             <Sparkles size={14} /> Optimize Project Status
           </button>
 
-          <form onSubmit={handleAiChat} className="flex gap-2 w-full">
+          <form onSubmit={handleAiChat} className="relative w-full flex items-center mt-2 group">
+            <div className="absolute left-4 text-[#A0A0A5]">
+              <Plus size={20} />
+            </div>
             <input 
               type="text"
               value={aiMessage}
               onChange={(e) => setAiMessage(e.target.value)}
-              placeholder="Ask for project insight..."
-              className="flex-1 w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 transition-all placeholder:text-[#64748B]"
+              placeholder="Ask anything"
+              className="w-full bg-[#2A2B2F] border border-transparent rounded-full pl-12 pr-14 py-3.5 text-[14px] text-white focus:outline-none focus:bg-[#323438] transition-all placeholder:text-[#A0A0A5]"
             />
-            <button type="submit" className="shrink-0 w-10 h-10 bg-[#3B82F6] text-white rounded-xl hover:bg-blue-600 transition-all shadow-[0_4px_12px_rgba(59,130,246,0.3)] flex items-center justify-center">
-              <ArrowUpRight size={18} />
+            <button 
+              type="submit" 
+              className="absolute right-2 w-9 h-9 rounded-full bg-[#424347] hover:bg-[#505257] text-[#E0E0E0] transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!aiMessage.trim() || isTyping}
+            >
+              <ArrowUp size={18} strokeWidth={2.5} />
             </button>
           </form>
         </div>
