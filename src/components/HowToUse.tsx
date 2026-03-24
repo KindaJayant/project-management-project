@@ -41,7 +41,7 @@ export default function HowToUse() {
         <div className="absolute top-0 inset-x-0 h-64 bg-blue-500/5 blur-3xl rounded-full pointer-events-none" />
         
         <div className="text-center mb-16 relative z-10">
-          <h2 className="text-4xl font-black tracking-tighter mb-4 bg-gradient-to-br from-white to-[#94A3B8] text-transparent bg-clip-text">PM-OS HANDBOOK</h2>
+          <h2 className="text-4xl font-black tracking-tighter mb-4 bg-gradient-to-br from-white to-[#94A3B8] text-transparent bg-clip-text">PROJECT MANAGEMENT HANDBOOK</h2>
           <p className="text-[#3B82F6] text-sm uppercase tracking-[0.4em] font-bold">Protocol Version 4.2.0 • Edition 2026</p>
         </div>
 
@@ -67,7 +67,6 @@ export default function HowToUse() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           <section className="glass-card !p-10 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-10"><Zap size={120} /></div>
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-[#3B82F6] flex items-center gap-3">
               <Sparkles size={16} /> Operational Quick Start
             </h3>
