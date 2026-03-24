@@ -219,3 +219,74 @@ button {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
+
+/* Custom UI Components */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.chat-form {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.chat-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A0A0A5;
+}
+
+.chat-input {
+  width: 100%;
+  background: #32363C;
+  border: 1px solid transparent;
+  border-radius: 32px;
+  padding: 0.85rem 3.5rem 0.85rem 3rem;
+  font-size: 14px;
+  color: white;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.chat-input::placeholder {
+  color: #A0A0A5;
+}
+
+.chat-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  background: #3A3E45;
+}
+
+.chat-submit {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: #505257;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.chat-submit:not(:disabled):hover {
+  background: #606267;
+}
+
+.chat-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

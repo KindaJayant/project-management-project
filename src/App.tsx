@@ -150,8 +150,8 @@ export default function App() {
             <BrainCircuit size={24} className="text-[#3B82F6]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight leading-tight">Project Management</h1>
-            <p className="text-[10px] text-[#94A3B8] uppercase tracking-[0.2em] mt-0.5">Edition 2026</p>
+            <h1 className="text-xl font-black tracking-widest leading-tight">NEXUS</h1>
+            <p className="text-[10px] text-[#94A3B8] uppercase tracking-[0.2em] mt-0.5">Project OS 2026</p>
           </div>
         </div>
 
@@ -190,10 +190,7 @@ export default function App() {
               <span className="text-[10px] text-cyan-400 font-bold">12ms Ping</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-              </div>
+              <div className="status-dot" />
               <span className="text-xs font-semibold text-white/90">AI Core Online</span>
             </div>
           </div>
@@ -286,8 +283,8 @@ export default function App() {
             <Sparkles size={14} /> Optimize Project Status
           </button>
 
-          <form onSubmit={handleAiChat} className="relative w-full flex items-center mt-2 group">
-            <div className="absolute left-4 text-[#A0A0A5]">
+          <form onSubmit={handleAiChat} className="chat-form">
+            <div className="chat-icon">
               <Plus size={20} />
             </div>
             <input 
@@ -295,14 +292,14 @@ export default function App() {
               value={aiMessage}
               onChange={(e) => setAiMessage(e.target.value)}
               placeholder="Ask anything"
-              className="w-full bg-[#2A2B2F] border border-transparent rounded-full pl-12 pr-14 py-3.5 text-[14px] text-white focus:outline-none focus:bg-[#323438] transition-all placeholder:text-[#A0A0A5]"
+              className="chat-input"
             />
             <button 
               type="submit" 
-              className="absolute right-2 w-9 h-9 rounded-full bg-[#424347] hover:bg-[#505257] text-[#E0E0E0] transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="chat-submit"
               disabled={!aiMessage.trim() || isTyping}
             >
-              <ArrowUp size={18} strokeWidth={2.5} />
+              <ArrowUp size={18} strokeWidth={3} />
             </button>
           </form>
         </div>
