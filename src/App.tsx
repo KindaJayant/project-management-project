@@ -120,11 +120,11 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#161316] text-white">
+    <div className="flex h-screen w-full text-white">
       {/* Sidebar */}
       <aside className="w-72 glass-panel m-4 flex flex-col p-6">
         <div className="flex items-center gap-3 mb-10 px-2">
-          <div className="w-10 h-10 bg-[#FF6D29] rounded-xl flex items-center justify-center accent-glow">
+          <div className="w-10 h-10 bg-[#D7263D] rounded-xl flex items-center justify-center accent-glow">
             <BrainCircuit size={24} />
           </div>
           <div>
@@ -140,7 +140,7 @@ export default function App() {
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ${
                 activeTab === item.id 
-                  ? 'bg-white/10 text-[#FF6D29] border border-white/10' 
+                  ? 'bg-white/10 text-[#D7263D] border border-white/10' 
                   : 'text-[#BABABA] hover:text-white hover:bg-white/5'
               }`}
             >
@@ -149,7 +149,7 @@ export default function App() {
               {activeTab === item.id && (
                 <motion.div 
                   layoutId="active-pill"
-                  className="ml-auto w-1.5 h-1.5 rounded-full bg-[#FF6D29]"
+                  className="ml-auto w-1.5 h-1.5 rounded-full bg-[#D7263D]"
                 />
               )}
             </button>
@@ -162,7 +162,7 @@ export default function App() {
             <span className="font-medium">Settings</span>
           </button>
           
-          <div className="glass-card p-4 mt-4 !bg-[#FF6D29]/10 !border-[#FF6D29]/20">
+          <div className="glass-card p-4 mt-4 !bg-[#D7263D]/10 !border-[#D7263D]/20">
             <p className="text-xs text-[#BABABA] mb-2">System Status</p>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -180,7 +180,7 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className="h-full"
           >
             {activeTab === 'dashboard' && <Dashboard state={projectState} />}
@@ -207,7 +207,7 @@ export default function App() {
         >
           <div className="flex items-center justify-between mb-4 dragging-handle cursor-move">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FF6D29] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#D7263D] rounded-lg flex items-center justify-center">
                 <BrainCircuit size={18} />
               </div>
               <h4 className="font-bold text-sm">AI Project Advisor</h4>
@@ -229,7 +229,7 @@ export default function App() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div className={`max-w-[85%] p-3 rounded-2xl text-[11px] leading-relaxed ${
-                  msg.role === 'user' ? 'bg-[#FF6D29] text-white shadow-lg' : 'bg-white/5 text-[#BABABA] border border-white/10'
+                  msg.role === 'user' ? 'bg-[#D7263D] text-white shadow-lg' : 'bg-white/5 text-[#BABABA] border border-white/10'
                 }`}>
                   {msg.content}
                 </div>
@@ -255,9 +255,9 @@ export default function App() {
               value={aiMessage}
               onChange={(e) => setAiMessage(e.target.value)}
               placeholder="Ask for project insight..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#FF6D29]/50 transition-all"
+              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#D7263D]/50 transition-all"
             />
-            <button type="submit" className="p-2 bg-[#FF6D29] rounded-xl hover:brightness-110 transition-all">
+            <button type="submit" className="p-2 bg-[#D7263D] rounded-xl hover:brightness-110 transition-all">
               <ArrowUpRight size={18} />
             </button>
           </form>

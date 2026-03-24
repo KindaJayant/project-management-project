@@ -1,13 +1,13 @@
 :root {
-  --primary: #FF6D29;
-  --bg-dark: #161316;
-  --bg-mid: #453027;
+  --primary: #D7263D;
+  --bg-dark: #02182B;
+  --bg-mid: #0B2545;
   --text-primary: #FFFFFF;
-  --text-secondary: #BABABA;
-  --glass-bg: rgba(69, 48, 39, 0.4);
+  --text-secondary: #8DA0B8;
+  --glass-bg: rgba(2, 24, 43, 0.4);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --surface-blur: 20px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --surface-blur: 24px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
   font-family: 'Neue Montreal', 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
@@ -35,9 +35,9 @@ body {
   overflow-x: hidden;
   background-color: var(--bg-dark);
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(255, 109, 41, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 90%, rgba(69, 48, 39, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(22, 19, 22, 1) 0%, transparent 100%);
+    radial-gradient(circle at 10% 10%, rgba(215, 38, 61, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(11, 37, 69, 0.3) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(2, 24, 43, 1) 0%, transparent 100%);
   background-attachment: fixed;
 }
 
@@ -141,7 +141,7 @@ body {
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 109, 41, 0.3);
+  background: rgba(215, 38, 61, 0.5);
 }
 
 nav button {
@@ -176,7 +176,7 @@ h1 {
 }
 
 .accent-glow {
-  box-shadow: 0 0 30px rgba(255, 109, 41, 0.2);
+  box-shadow: 0 0 40px rgba(215, 38, 61, 0.35);
 }
 
 h1, h2, h3, h4 {
@@ -204,7 +204,7 @@ button {
 
 .primary-btn:hover {
   filter: brightness(1.1);
-  box-shadow: 0 0 20px rgba(255, 109, 41, 0.4);
+  box-shadow: 0 0 25px rgba(215, 38, 61, 0.5);
 }
 
 ::-webkit-scrollbar {
