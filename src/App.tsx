@@ -80,7 +80,9 @@ export default function App() {
       setChatHistory([...newHistory, { role: 'assistant', content: reply }]);
     } catch (error: any) {
       console.error("AI Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: `API Error: ${error.message}` }]);
+      const isUserNotFound = error.message?.toLowerCase().includes("user not found");
+      const errorMessage = isUserNotFound ? "API Error: Account not found. Please verify your OpenRouter account exists and the API key is active." : `API Error: ${error.message}`;
+      setChatHistory(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsTyping(false);
     }
@@ -134,7 +136,9 @@ export default function App() {
       }
     } catch (error: any) {
       console.error("AI Refine Error:", error);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: `API Error: ${error.message}` }]);
+      const isUserNotFound = error.message?.toLowerCase().includes("user not found");
+      const errorMessage = isUserNotFound ? "API Error: Account not found. Please verify your OpenRouter account exists and the API key is active." : `API Error: ${error.message}`;
+      setChatHistory(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsTyping(false);
     }
@@ -234,7 +238,6 @@ export default function App() {
             </div>
             <h4 className="font-bold text-sm text-[#F8FAFC]">AI Project Advisor</h4>
           </div>
-          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
         </div>
         
         <div className="flex-1 overflow-auto space-y-4 mb-4 pr-2 custom-scrollbar relative z-10">
@@ -284,9 +287,6 @@ export default function App() {
           </button>
 
           <form onSubmit={handleAiChat} className="chat-form">
-            <div className="chat-icon">
-              <Plus size={20} />
-            </div>
             <input 
               type="text"
               value={aiMessage}
