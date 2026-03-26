@@ -30,6 +30,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
+  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
 
@@ -207,28 +208,69 @@ export default function App() {
           </div>
         </div>
 
-        {/* Project Selector */}
-        <div className="mb-8 relative z-10">
-          <div className="flex items-center justify-between mb-3 px-2">
+        {/* Project Selector (Custom Premium Dropdown) */}
+        <div className="mb-8 relative z-10 px-2">
+          <div className="flex items-center justify-between mb-3">
             <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-widest">Active Project</span>
             <button 
               onClick={() => setIsCreateModalOpen(true)}
-              className="p-1 hover:bg-white/10 rounded transition-colors text-[#3B82F6]"
+              className="p-1 hover:bg-[#3B82F6]/10 rounded-lg transition-all text-[#3B82F6] border border-transparent hover:border-[#3B82F6]/20"
+              title="New Project"
             >
               <Plus size={16} />
             </button>
           </div>
-          <div className="relative group">
-            <select 
-              value={currentProjectId || ''} 
-              onChange={(e) => setCurrentProjectId(e.target.value)}
-              className="w-full bg-[#0F172A]/80 border border-white/5 rounded-xl px-4 py-3 text-sm font-semibold appearance-none focus:outline-none focus:border-[#3B82F6]/50 transition-all cursor-pointer"
+          
+          <div className="relative">
+            <button
+              onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
+              className="w-full bg-[#0F172A]/80 border border-white/5 rounded-xl px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-all text-left shadow-inner group"
             >
-              {projects.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-            <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none" />
+              <span className="text-sm font-semibold truncate pr-2">
+                {currentProject?.name || 'Select Project'}
+              </span>
+              <ChevronDown 
+                size={16} 
+                className={`text-[#94A3B8] transition-transform duration-300 ${isProjectDropdownOpen ? 'rotate-180' : ''}`} 
+              />
+            </button>
+
+            <AnimatePresence>
+              {isProjectDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setIsProjectDropdownOpen(false)} 
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute left-0 right-0 mt-2 p-1.5 bg-[#0F172A]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 overflow-hidden"
+                  >
+                    <div className="max-h-[240px] overflow-y-auto custom-scrollbar">
+                      {projects.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => {
+                            setCurrentProjectId(p.id);
+                            setIsProjectDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                            currentProjectId === p.id 
+                              ? 'bg-[#3B82F6]/10 text-[#3B82F6] font-bold' 
+                              : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/5'
+                          }`}
+                        >
+                          <div className={`w-1.5 h-1.5 rounded-full ${currentProjectId === p.id ? 'bg-[#3B82F6] shadow-[0_0_8px_#3B82F6]' : 'bg-white/10'}`} />
+                          <span className="text-xs truncate">{p.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -264,7 +306,6 @@ export default function App() {
           <div className="mt-4 flex flex-col gap-3 p-3.5 bg-[#0F172A]/80 rounded-xl border border-white/5 shadow-inner">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-widest">System Status</span>
-              <span className="text-[10px] text-cyan-400 font-bold">12ms Ping</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="status-dot" />
