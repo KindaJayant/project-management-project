@@ -1,9 +1,23 @@
-import { AlertCircle, ShieldCheck, ShieldAlert, Zap } from 'lucide-react';
+import { AlertCircle, ShieldCheck, ShieldAlert, Zap, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ProjectState } from '../services/projectService';
 
-export default function RiskManager({ state }: { state: ProjectState }) {
+export default function RiskManager({ state, setState }: { state: ProjectState, setState: (state: ProjectState) => void }) {
   const risks = state.risks;
+
+  const addRisk = () => {
+    const newRisk = {
+      id: crypto.randomUUID(),
+      name: 'Unforeseen Variable',
+      probability: 'High',
+      impact: 'Medium',
+      status: 'Active'
+    };
+    setState({
+      ...state,
+      risks: [newRisk, ...state.risks]
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -16,9 +30,18 @@ export default function RiskManager({ state }: { state: ProjectState }) {
 
   return (
     <div className="space-y-8 p-2">
-      <header>
-        <h2 className="text-3xl font-bold tracking-tight">Risk Register</h2>
-        <p className="text-[#94A3B8] mt-1">Predictive risk assessment and mitigation strategy center.</p>
+      <header className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Risk Register</h2>
+          <p className="text-[#94A3B8] mt-1">Predictive risk assessment and mitigation strategy center.</p>
+        </div>
+        <button 
+          onClick={addRisk}
+          className="glass-card !py-2 !px-4 flex items-center gap-2 hover:bg-white/5 transition-all"
+        >
+          <Plus size={18} className="text-[#3B82F6]" />
+          <span className="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Identify Risk</span>
+        </button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -50,26 +73,30 @@ export default function RiskManager({ state }: { state: ProjectState }) {
 
         <div className="glass-panel p-8 flex flex-col">
           <h3 className="text-xl font-bold mb-6">Mitigation Queue</h3>
-          <div className="space-y-4 flex-1">
-            {risks.map((risk, i) => (
-              <div key={risk.id} className="glass-card flex items-center justify-between !py-4">
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-lg bg-white/5 ${getStatusColor(risk.status)}`}>
-                    {risk.status === 'Mitigated' ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold">{risk.name}</h4>
-                    <p className="text-xs text-[#94A3B8]">Impact: {risk.impact}</p>
-                  </div>
+          <div className="space-y-4 flex-1 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {risks.length === 0 ? (
+                <p className="text-center text-[#94A3B8] text-sm py-10 italic">No risks logged. Stay vigilant.</p>
+            ) : (
+                risks.map((risk, i) => (
+                <div key={risk.id} className="glass-card flex items-center justify-between !py-4">
+                    <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-lg bg-white/5 ${getStatusColor(risk.status)}`}>
+                        {risk.status === 'Mitigated' ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-semibold">{risk.name}</h4>
+                        <p className="text-xs text-[#94A3B8]">Impact: {risk.impact}</p>
+                    </div>
+                    </div>
+                    <div className="text-right">
+                    <div className={`text-xs font-bold ${getStatusColor(risk.status)}`}>
+                        {risk.status}
+                    </div>
+                    <p className="text-[10px] text-[#94A3B8]">Prob: {risk.probability}</p>
+                    </div>
                 </div>
-                <div className="text-right">
-                  <div className={`text-xs font-bold ${getStatusColor(risk.status)}`}>
-                    {risk.status}
-                  </div>
-                  <p className="text-[10px] text-[#94A3B8]">Prob: {risk.probability}</p>
-                </div>
-              </div>
-            ))}
+                ))
+            )}
           </div>
           <button className="primary-btn w-full mt-6">Generate New Mitigation</button>
         </div>

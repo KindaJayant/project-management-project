@@ -6,11 +6,12 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Clock,
+  Plus
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ProjectState } from '../services/projectService';
 
-export default function Dashboard({ state }: { state: ProjectState }) {
+export default function Dashboard({ state, setState }: { state: ProjectState, setState: (state: ProjectState) => void }) {
   const stats = [
     { label: 'Budget Health', value: state.metrics.budgetHealth, change: state.metrics.budgetChange, trend: 'up', icon: TrendingUp },
     { label: 'Risk Indices', value: state.metrics.riskIndices, change: state.metrics.riskChange, trend: 'down', icon: AlertCircle },
@@ -19,6 +20,20 @@ export default function Dashboard({ state }: { state: ProjectState }) {
   ];
 
   const recentTasks = state.tasks;
+
+  const addTask = () => {
+    const newTask = {
+      id: crypto.randomUUID(),
+      name: 'New Strategic Task',
+      status: 'In Progress',
+      owner: 'System Agent',
+      priority: 'Medium'
+    };
+    setState({
+      ...state,
+      tasks: [newTask, ...state.tasks]
+    });
+  };
 
   return (
     <div className="space-y-8 p-2">
@@ -91,20 +106,32 @@ export default function Dashboard({ state }: { state: ProjectState }) {
 
         {/* Recent Tasks */}
         <div className="glass-panel p-8">
-          <h3 className="text-xl font-bold mb-8">Active Workflows</h3>
-          <div className="space-y-6">
-            {recentTasks.map((task, i) => (
-              <div key={i} className="flex items-start gap-4">
-                <div className={`w-2 h-2 rounded-full mt-2 ${
-                  task.priority === 'High' ? 'bg-[#3B82F6]' : 
-                  task.priority === 'Medium' ? 'bg-[#94A3B8]' : 'bg-white/10'
-                }`} />
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold">{task.name}</h4>
-                  <p className="text-xs text-[#94A3B8]">{task.owner} • {task.status}</p>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-bold">Active Workflows</h3>
+            <button 
+              onClick={addTask}
+              className="p-1.5 bg-[#3B82F6]/10 text-[#3B82F6] hover:bg-[#3B82F6] hover:text-white rounded-lg transition-all border border-[#3B82F6]/20"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
+          <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {recentTasks.length === 0 ? (
+              <p className="text-center text-[#94A3B8] text-sm py-10 italic">No tasks yet. Click + to add.</p>
+            ) : (
+              recentTasks.map((task, i) => (
+                <div key={task.id} className="flex items-start gap-4">
+                  <div className={`w-2 h-2 rounded-full mt-2 ${
+                    task.priority === 'High' ? 'bg-[#3B82F6]' : 
+                    task.priority === 'Medium' ? 'bg-[#94A3B8]' : 'bg-white/10'
+                  }`} />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold">{task.name}</h4>
+                    <p className="text-xs text-[#94A3B8]">{task.owner} • {task.status}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
             <button className="w-full mt-4 py-3 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/5 transition-all">
               View All Tasks
             </button>

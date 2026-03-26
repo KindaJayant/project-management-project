@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   GanttChartSquare, 
@@ -12,7 +12,9 @@ import {
   Sparkles,
   Plus,
   ArrowUp,
-  X
+  X,
+  ChevronDown,
+  FolderPlus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,11 +24,55 @@ import Planning from './components/Planning';
 import RiskManager from './components/RiskManager';
 import Budget from './components/Budget';
 import HowToUse from './components/HowToUse';
-import { initialProjectState, ProjectState } from './services/projectService';
+import { initialProjectState, ProjectState, Project, projectService } from './services/projectService';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [projectState, setProjectState] = useState<ProjectState>(initialProjectState);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
+
+  // Load projects from localStorage on mount
+  useEffect(() => {
+    const loadedProjects = projectService.getProjects();
+    if (loadedProjects.length === 0) {
+      // Create a default project if none exist
+      const defaultProject = projectService.createProject('Strategic Digital Overhaul');
+      setProjects([defaultProject]);
+      setCurrentProjectId(defaultProject.id);
+      projectService.saveProjects([defaultProject]);
+    } else {
+      setProjects(loadedProjects);
+      setCurrentProjectId(loadedProjects[0].id);
+    }
+  }, []);
+
+  const currentProject = projects.find(p => p.id === currentProjectId) || projects[0];
+  const projectState = currentProject?.state || initialProjectState;
+
+  const setProjectState = (newState: ProjectState) => {
+    const updatedProjects = projects.map(p => 
+      p.id === currentProjectId ? { ...p, state: newState } : p
+    );
+    setProjects(updatedProjects);
+    projectService.saveProjects(updatedProjects);
+  };
+
+  const handleCreateProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProjectName.trim()) return;
+    
+    const newProject = projectService.createProject(newProjectName);
+    const updatedProjects = [...projects, newProject];
+    setProjects(updatedProjects);
+    setCurrentProjectId(newProject.id);
+    projectService.saveProjects(updatedProjects);
+    
+    setNewProjectName('');
+    setIsCreateModalOpen(false);
+    setChatHistory(prev => [...prev, { role: 'assistant', content: `New project "${newProjectName}" created and initialized.` }]);
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -161,6 +207,31 @@ export default function App() {
           </div>
         </div>
 
+        {/* Project Selector */}
+        <div className="mb-8 relative z-10">
+          <div className="flex items-center justify-between mb-3 px-2">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-widest">Active Project</span>
+            <button 
+              onClick={() => setIsCreateModalOpen(true)}
+              className="p-1 hover:bg-white/10 rounded transition-colors text-[#3B82F6]"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
+          <div className="relative group">
+            <select 
+              value={currentProjectId || ''} 
+              onChange={(e) => setCurrentProjectId(e.target.value)}
+              className="w-full bg-[#0F172A]/80 border border-white/5 rounded-xl px-4 py-3 text-sm font-semibold appearance-none focus:outline-none focus:border-[#3B82F6]/50 transition-all cursor-pointer"
+            >
+              {projects.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+            <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none" />
+          </div>
+        </div>
+
         <nav className="flex-1 space-y-2 relative z-10">
           {navItems.map((item) => (
             <button
@@ -207,17 +278,17 @@ export default function App() {
       <main className="flex-1 overflow-y-auto overflow-x-hidden py-4 relative z-0">
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeTab}
+            key={`${currentProjectId}-${activeTab}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className="h-full pr-4"
           >
-            {activeTab === 'dashboard' && <Dashboard state={projectState} />}
-            {activeTab === 'planning' && <Planning state={projectState} />}
-            {activeTab === 'risk' && <RiskManager state={projectState} />}
-            {activeTab === 'budget' && <Budget state={projectState} />}
+            {activeTab === 'dashboard' && <Dashboard state={projectState} setState={setProjectState} />}
+            {activeTab === 'planning' && <Planning state={projectState} setState={setProjectState} />}
+            {activeTab === 'risk' && <RiskManager state={projectState} setState={setProjectState} />}
+            {activeTab === 'budget' && <Budget state={projectState} setState={setProjectState} />}
             {activeTab === 'how-to-use' && <HowToUse />}
             {(activeTab === 'analytics' || activeTab === 'team') && (
               <div className="flex flex-col items-center justify-center h-full glass-panel mr-4">
@@ -338,6 +409,68 @@ export default function App() {
               </form>
             </div>
           </motion.aside>
+        )}
+      </AnimatePresence>
+
+      {/* Create Project Modal */}
+      <AnimatePresence>
+        {isCreateModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="glass-panel w-full max-w-md p-8 relative overflow-hidden"
+            >
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
+              
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#3B82F6]/20 border border-[#3B82F6]/30 rounded-xl flex items-center justify-center">
+                    <FolderPlus size={20} className="text-[#3B82F6]" />
+                  </div>
+                  <h2 className="text-xl font-bold">New Project</h2>
+                </div>
+                <button 
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="text-[#94A3B8] hover:text-white transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateProject} className="space-y-6">
+                <div>
+                  <label className="block text-[10px] text-[#64748B] font-bold uppercase tracking-widest mb-2 px-1">Project Name</label>
+                  <input 
+                    autoFocus
+                    type="text"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    placeholder="Enter project identifier..."
+                    className="w-full bg-[#0F172A]/80 border border-white/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#3B82F6]/50 transition-all shadow-inner"
+                  />
+                </div>
+                
+                <div className="flex gap-3 pt-2">
+                  <button 
+                    type="button"
+                    onClick={() => setIsCreateModalOpen(false)}
+                    className="flex-1 py-3 border border-white/5 rounded-xl text-sm font-bold text-[#94A3B8] hover:bg-white/5 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    disabled={!newProjectName.trim()}
+                    className="flex-1 py-3 bg-[#3B82F6] rounded-xl text-sm font-bold text-white shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Initialize
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
